@@ -23,6 +23,7 @@ public class WordService {
 	private static final String WORD_BY_ID_QUERY = "SELECT * FROM words WHERE id = ?";
 	private static final String ADD_WORD_QUERY = "INSERT INTO words VALUE (?,?,?,?,?)";
 	private static final String DELETE_WORD_BY_ID_QUERY = "DELETE FROM words WHERE id = ?";
+	private static final String ALL_GUSSED_WORD_BY_USER_QUERY = "SELECT DISTINCT w.* FROM words w, games WHERE games.word_id = w.id AND games.user_id = ? AND games.result = 1";
 	
 	public static void deleteWordById(Integer id) {
 		Connection conn = null;
@@ -112,16 +113,7 @@ public class WordService {
 		} else {
 			rs.updateRow();
 		}
-/*		pState = conn.prepareStatement(ADD_WORD_QUERY);
-		pState.setInt(1, word.getId());
-		pState.setString(2, word.getWord());
-		pState.setInt(3, word.getCategoryId());
-		pState.setInt(4, word.getUserDTO().getId());
-		pState.setString(5, word.getDescription());
-		
 
-		pState.executeUpdate();*/
-		
 		return word;
 	}
 	
@@ -166,6 +158,46 @@ public class WordService {
 		return wordsList;
 	}
 	
+	public static ArrayList<WordDTO> getAllGussedWordByUserId(Integer userId) {
+		Connection conn = null;
+		
+		try {
+			conn = mysql.getCon();
+			return getAllGussedWordByUserId(conn, userId);
+		} catch(SQLException e) {
+			Log.error("Error during getAllGussedWordByUserId()",e);
+		}
+		
+		finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				Log.error("Error while clossing connection - getAllGussedWordByUserId()");
+			}
+		}
+		
+		return null;
+	}
+	
+	public static ArrayList<WordDTO> getAllGussedWordByUserId(Connection conn, Integer userId) throws SQLException {
+		
+		ArrayList<WordDTO> wordsList = new ArrayList<WordDTO>();
+		
+		PreparedStatement pState = null;
+		ResultSet rs = null;
+		
+		
+		pState = conn.prepareStatement(ALL_GUSSED_WORD_BY_USER_QUERY);
+		pState.setInt(1, userId);
+		rs = pState.executeQuery();
+		
+		while(rs.next()) {
+			WordDTO word = loadFromResultSet(conn, rs);
+			wordsList.add(word);
+		}
+		
+		return wordsList;
+	}	
 	
 	public static WordDTO getWordById(Integer id) {
 		Connection conn = null;
@@ -179,7 +211,7 @@ public class WordService {
 			try {
 				conn.close();
 			} catch (SQLException e) {
-				Log.error("Error while clossing connection - getWordById()");
+				Log.error("Error while clossing connection - getAllGussedWordByUserId()");
 			}
 		}
 		
@@ -194,7 +226,8 @@ public class WordService {
 		
 		try {
 			pState = conn.prepareStatement(WORD_BY_ID_QUERY);
-			
+			pState.setInt(1, id);
+			rs = pState.executeQuery();
 			rs.first();
 			
 			word = loadFromResultSet(conn, rs);

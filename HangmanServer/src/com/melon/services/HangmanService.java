@@ -15,6 +15,7 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.melon.dto.GameDTO;
 import com.melon.dto.UserDTO;
 import com.melon.dto.WordDTO;
 import com.melon.interfaces.IHangmanServices;
@@ -81,6 +82,23 @@ public class HangmanService {
 	}
 	
 	@POST
+	@Path("/saveGame")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public String saveGame(@FormParam("game") String game) {
+		
+		try {
+			String result = mapper.writeValueAsString(GameService.saveGame(mapper.readValue(game, GameDTO.class)));
+			log.info("saveWord result: "+ result);
+			return result;
+		} catch (Exception e) {
+			return processException(e);
+		} catch (Throwable t) {
+			return "";
+		}
+
+	}
+	
+	@POST
 	@Path("/deleteWordById")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public String deleteWordById(@FormParam("wordId") String wordId) {
@@ -103,6 +121,23 @@ public class HangmanService {
 		
 		try {
 			String result = mapper.writeValueAsString(UserService.getUserByEmail(email));
+			log.info(result);
+			return result;
+		} catch (Exception e) {
+			return processException(e);
+		} catch (Throwable t) {
+			return "";
+		}
+
+	}
+	
+	@POST
+	@Path("/getAllGussedWordByUserId")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public String getAllGussedWordByUserId(@FormParam("userId") String userId) {
+		
+		try {
+			String result = mapper.writeValueAsString(WordService.getAllGussedWordByUserId(Integer.valueOf(userId)));
 			log.info(result);
 			return result;
 		} catch (Exception e) {

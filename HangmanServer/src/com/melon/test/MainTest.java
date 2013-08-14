@@ -4,7 +4,10 @@ import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.codehaus.jackson.map.ObjectMapper;
+
 import com.melon.dto.CategoryDTO;
+import com.melon.dto.GameDTO;
 import com.melon.dto.UserDTO;
 import com.melon.dto.WordDTO;
 import com.melon.services.CategoryService;
@@ -20,7 +23,7 @@ public class MainTest {
 	public static void main(String[] args) throws SQLException {
 		
 		
-		ArrayList<WordDTO> wordsList = WordService.getAllWordsByCategory(1);
+/*		ArrayList<WordDTO> wordsList = WordService.getAllWordsByCategory(1);
 		System.out.println(wordsList.size());
 		
 		WordDTO word = new WordDTO();
@@ -32,7 +35,19 @@ public class MainTest {
 		word.setUserDTO(user);
 		word.setDescription("KUFTEEE");
 		
-		WordService.saveWord(word);
+		WordService.saveWord(word);*/
+/*		ObjectMapper mapper = new ObjectMapper();
+		ArrayList<String> lettersGussed = new ArrayList<String>();
+		lettersGussed.add("a");
+		lettersGussed.add("x");
+		GameDTO game = new GameDTO();
+		game.setResult(true);
+		game.setWholeWordGuessed(false);
+		game.setUserId(13);
+		game.setWordID(53);*/
+		
+		System.out.println(WordService.getAllGussedWordByUserId(13).size());
+//		game.setGuestedLetters(mapper.writeValueAsString(lettersGussed));
 		
 /*		ArrayList<CategoryDTO> categoriesList = CategoryService.getAllCetogiries();
 		for(int i = 0; i < categoriesList.get(0).getWordList().size(); i++) {

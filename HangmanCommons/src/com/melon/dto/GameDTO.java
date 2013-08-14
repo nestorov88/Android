@@ -2,13 +2,16 @@ package com.melon.dto;
 
 import java.util.ArrayList;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+
 public class GameDTO {
 
 	private Integer id;
 	private Boolean result;
 	private Boolean wholeWordGuessed;
-	private WordDTO wordDTO;
-	private UserDTO userDTO;
+	private Integer userId;
+	private Integer wordID;
 	
 	private ArrayList<String> guestedLetters;
 	
@@ -36,18 +39,19 @@ public class GameDTO {
 	public void setGuestedLetters(ArrayList<String> guestedLetters) {
 		this.guestedLetters = guestedLetters;
 	}
-	public WordDTO getWordDTO() {
-		return wordDTO;
+	public Integer getUserId() {
+		return userId;
 	}
-	public void setWordDTO(WordDTO wordDTO) {
-		this.wordDTO = wordDTO;
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
-	public UserDTO getUserDTO() {
-		return userDTO;
+	public Integer getWordID() {
+		return wordID;
 	}
-	public void setUserDTO(UserDTO userDTO) {
-		this.userDTO = userDTO;
+	public void setWordID(Integer wordID) {
+		this.wordID = wordID;
 	}
+
 	
 	
 	
