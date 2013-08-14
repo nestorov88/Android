@@ -10,12 +10,12 @@ import java.sql.SQLException;
 
 public class MySqlConnection {
 	
-/*    private String dbUrl = "jdbc:mysql://127.0.0.1/PingPongDB";
-	private String dbUser = "root";
-	private String dbPass = "5282";*/
-    private String dbUrl = "jdbc:mysql://87.120.137.9:3306/magic_table";
-	private String dbUser = "nestor";
+    private String dbUrl = "jdbc:mysql://127.0.0.1/Hangman";
+	private String dbUser = "hangman";
 	private String dbPass = "hail";
+/*    private String dbUrl = "jdbc:mysql://87.120.137.9:3306/magic_table";
+	private String dbUser = "nestor";
+	private String dbPass = "hail";*/
 	private Connection con;
 	private static int nextPlayerID = -1;
 	private PreparedStatement pState = null;
