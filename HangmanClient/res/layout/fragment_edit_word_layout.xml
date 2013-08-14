@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingTop="?android:attr/actionBarSize" >
+    
+    <TextView 
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="@string/enter_your_word"/>
+    <EditText 
+        android:id="@+id/etWord"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:layout_width="300dp"/>
+
+   <TextView 
+		android:layout_width="300dp"
+	    android:layout_height="wrap_content"
+	    android:text="@string/enter_description"/>
+    <EditText 
+        android:inputType="textMultiLine"
+        android:id="@+id/etDescription"
+        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:gravity="top|left"/>
+   <TextView 
+		android:layout_width="300dp"
+	    android:layout_height="wrap_content"
+	    android:text="@string/select_category"/>          
+	<Spinner 
+	    android:id="@+id/spinnerEditCategory"
+	    android:layout_width="300dp"
+	    android:layout_height="wrap_content"/> 
+    <LinearLayout 
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="300dp">       
+    <Button 
+        android:id="@+id/btnEditWord"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_word"/>
+    <Button 
+        android:id="@+id/btnCancel"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"/>        
+    </LinearLayout>
+    
+
+</LinearLayout>
