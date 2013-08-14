@@ -33,15 +33,27 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
         android:layout_marginTop="20dp"
         android:textSize="20dp"
         android:text=""/>
     
-    <ImageView 
-        android:id="@+id/imgHangmanImage"
-        android:layout_width="300dp"
+    <LinearLayout 
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"/>      
+        android:orientation="horizontal">
+        <TextView 
+            android:id="@+id/txtWordDescription"
+            android:layout_width="150dp"
+            android:maxLines="3"
+            android:layout_height="wrap_content"
+            android:text="@string/word_description"/>
+    	<ImageView 
+	        android:id="@+id/imgHangmanImage"
+	        android:layout_width="300dp"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"/>  
+    </LinearLayout>
         
     <EditText 
         android:id="@+id/etLetterForGuess"

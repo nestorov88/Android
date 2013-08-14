@@ -1,9 +1,16 @@
 package com.melon.fragments;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import com.example.hangmanclient.R;
 import com.melon.activities.EditWordActivity;
+import com.melon.dto.GameDTO;
 import com.melon.dto.UserDTO;
+import com.melon.dto.WordDTO;
 import com.melon.interfaces.FragmentListener;
+import com.melon.utils.Manager;
+import com.melon.utils.NNAsyncTask;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -25,6 +32,11 @@ public class UserDetailsFragment extends Fragment{
 	private FragmentListener mListener;
 	private TextView txtUserName;
 	private TextView txtUserId;
+	private TextView txtLoses;
+	private TextView txtWins;
+	private TextView txtWholeWordGuesses;
+	private TextView txtGussedWords;
+	private ArrayList<WordDTO> gussedWords;
 	private UserDTO user;
 	private static final String TAG = UserDetailsFragment.class.getSimpleName();
 	@Override
@@ -38,14 +50,22 @@ public class UserDetailsFragment extends Fragment{
         
 		txtUserName = (TextView) view.findViewById(R.id.txtUserName);
 		txtUserId = (TextView) view.findViewById(R.id.txtUserId);
+		txtLoses = (TextView) view.findViewById(R.id.txtLoses);
+		txtWins = (TextView) view.findViewById(R.id.txtWins);
+		txtGussedWords = (TextView) view.findViewById(R.id.txtGuessedWords);
+		txtWholeWordGuesses = (TextView) view.findViewById(R.id.txtWholeWordGuesses);
 		
 		if(user == null) {
 			user = mListener.getUser();
 		}
 		
-		txtUserId.setText(String.valueOf(user.getId()));
-		txtUserName.setText(user.getEmail());
 
+		if(savedInstanceState == null) {
+			setupUserDetails();
+		}
+
+		
+		
 		return view;
 	}
 
@@ -95,15 +115,82 @@ public class UserDetailsFragment extends Fragment{
 			mListener.changeFragment(new WordsListFragment(), "words_list", true);
 			return true;
 		case R.id.startGame:
-
 			mListener.changeFragment(new HangmanFragment(), "hangman", true);
+			return true;
+		case R.id.addWord:
+			mListener.changeFragment(new AddWordFragment(), "add_word", true);
 		default:
 			return false;
 		}
 	}
 	
 	
+	private void setupUserDetails() {
+		if(user != null) {
+			new NNAsyncTask() {
+				
+				@Override
+				public boolean onPostLoad() {
+					// TODO Auto-generated method stub
+					txtUserId.setText(String.valueOf(user.getId()));
+					txtUserName.setText(user.getEmail());
+					ArrayList<GameDTO> userGamesList = user.getGamesList();
+					
+					int wins = 0;
+					int loses = 0;
+					int wholeWordGuess = 0;
+					if(userGamesList != null ) {
+						if(userGamesList.size() > 0) {
+							for(GameDTO game: userGamesList) {
+								if(game.getResult()) {
+									wins++;
+									if(game.getWholeWordGuessed()) {
+										wholeWordGuess++;
+									}
+								} else {
+									loses++;
+								}
+							}						
+						}
+					}
+					txtWins.setText(String.valueOf(wins));
+					txtLoses.setText(String.valueOf(loses));
+					txtWholeWordGuesses.setText(String.valueOf(wholeWordGuess));
+					txtGussedWords.setText(gussedWords.toString());
+					
+					return false;
+				}
+				
+				@Override
+				public boolean onLoad() {
+					// TODO Auto-generated method stub
+					gussedWords = Manager.getServiceClient().getAllGussedWordByUserId(user.getId());
+					return false;
+				}
+			}.execute();
+		}
+	}
 	
+	public void refreshUser() {
+		new NNAsyncTask() {
+			
+			@Override
+			public boolean onPostLoad() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean onLoad() {
+				// TODO Auto-generated method stub
+				if(user != null) {
+					mListener.setUser(Manager.getServiceClient().getUserByEmail(user.getEmail()));
+					user = mListener.getUser();
+				}				
+				return false;
+			}
+		}.execute();
+	}
 	
 
 }

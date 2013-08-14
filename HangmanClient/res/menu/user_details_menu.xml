@@ -12,6 +12,10 @@
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
         android:title="@string/edit_my_words"/>        
-    
+    <item
+        android:id="@+id/addWord"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/add_word"/>
 
 </menu>

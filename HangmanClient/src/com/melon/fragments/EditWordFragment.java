@@ -34,6 +34,7 @@ public class EditWordFragment extends Fragment{
 	private EditText etDescription;
 	private EditText etWord;
 	private Button btnEditWord;
+	private Button btnCancel;
 	private Spinner spinnerCategory;
 	private WordDTO wordToEdit;
 	private ArrayAdapter<CategoryDTO> categoryAdapter;
@@ -54,16 +55,28 @@ public class EditWordFragment extends Fragment{
 			etWord.setText(wordToEdit.getWord());
 		}
 		
+		btnCancel = (Button) view.findViewById(R.id.btnCancel);
+		btnCancel.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				btnCancel.setEnabled(false);
+				getFragmentManager().popBackStack();
+			}
+		});
+		
 		btnEditWord = (Button) view.findViewById(R.id.btnEditWord);
 		btnEditWord.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				editWord(wordToEdit);
-				WordsListFragment fr = (WordsListFragment) getFragmentManager().findFragmentByTag("words_list");
-				if (fr != null) {
-					fr.refreshWordExpandableList(true);
+				if(editWord(wordToEdit)) {
+					WordsListFragment fr = (WordsListFragment) getFragmentManager().findFragmentByTag("words_list");
+					if (fr != null) {
+						fr.refreshWordExpandableList(true);
+					}
 				}
 			}
 		});
@@ -128,7 +141,7 @@ public class EditWordFragment extends Fragment{
 
 	}
 	
-	@Override
+/*	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// TODO Auto-generated method stub
 		setHasOptionsMenu(true);
@@ -146,12 +159,13 @@ public class EditWordFragment extends Fragment{
 		default:
 			return false;
 		}
-	}
-	private void editWord(final WordDTO wordToEdit) {
+	}*/
+	
+	private boolean editWord(final WordDTO wordToEdit) {
 		final String word = etWord.getText().toString();
 		String description = etDescription.getText().toString();
-		
-		if(word != null && !word.equals("")) {
+		btnEditWord.setEnabled(false);
+		if(word != null && !word.equals("") && word.length() >= 5) {
 			
 			CategoryDTO category = (CategoryDTO) spinnerCategory.getSelectedItem();
 			wordToEdit.setUserDTO(user);
@@ -168,7 +182,8 @@ public class EditWordFragment extends Fragment{
 					// TODO Auto-generated method stub
 					Toast.makeText(getActivity(), "Word '" + word + "' was edited.", Toast.LENGTH_SHORT).show();
 					mListener.setWordToEdit(null);
-					getFragmentManager().popBackStack();
+					mListener.changeFragment(new WordsListFragment(), "word_list", true);
+//					getFragmentManager().popBackStack();
 					return false;
 				}
 				
@@ -179,6 +194,11 @@ public class EditWordFragment extends Fragment{
 					return false;
 				}
 			}.execute();
+			return true;
+		} else {
+			Toast.makeText(getActivity(), "The word must be at least 5 characters", Toast.LENGTH_SHORT).show();
+			btnEditWord.setEnabled(true);
+			return false;
 		}
 	}
 	

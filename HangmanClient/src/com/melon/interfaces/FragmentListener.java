@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Fragment;
 
 import com.melon.dto.CategoryDTO;
+import com.melon.dto.GameDTO;
 import com.melon.dto.UserDTO;
 import com.melon.dto.WordDTO;
 
@@ -22,5 +23,8 @@ public interface FragmentListener {
 	
 	public void setWordToEdit(WordDTO word);
 	public WordDTO getWordToEdit();
+	
+	public GameDTO getGame();
+	public void setGame(GameDTO game);
 	
 }

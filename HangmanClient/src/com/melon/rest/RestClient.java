@@ -8,6 +8,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
 import com.melon.dto.CategoryDTO;
+import com.melon.dto.GameDTO;
 import com.melon.dto.UserDTO;
 import com.melon.dto.WordDTO;
 
@@ -24,8 +25,8 @@ public class RestClient extends RestClientBase{
 	   
 	   
 	    public RestClient() {
-	        super("172.16.1.214", 18080);
-//	    	super("212.25.61.159", 18080);
+//	        super("172.16.1.214", 18080);
+	    	super("212.25.61.159", 18080);
 	    }
 	    
 
@@ -41,6 +42,19 @@ public class RestClient extends RestClientBase{
 				return null;
 			}
 	    }
+	    
+	    public GameDTO saveGame(GameDTO game) {
+	    	
+	    	Map<String, String> params = new HashMap<String, String>();
+	    	Log.i(TAG, "Save game: " + game);
+	    	try {
+	    		params.put("game", mapper.writeValueAsString(game));
+				return post("/HangmanServer/rest/Melon2/saveGame", new TypeReference<GameDTO>() { },params);
+			} catch (Exception e) {
+				Log.e(TAG, "Error during saveGame", e);
+				return null;
+			}
+	    }	
 	    
 	    public WordDTO saveWord(WordDTO word) {
 	    	
@@ -88,6 +102,18 @@ public class RestClient extends RestClientBase{
 				return post("/HangmanServer/rest/Melon2/getAllCetogiries", new TypeReference<ArrayList<CategoryDTO>>() { },params);
 			} catch (Exception e) {
 				Log.e(TAG, "Error during getUserByEmail", e);
+				return null;
+			}
+	    }	  
+	    public ArrayList<WordDTO> getAllGussedWordByUserId(Integer userId) {
+	    	
+	    	Map<String, String> params = new HashMap<String, String>();
+	    	params.put("userId", String.valueOf(userId));
+	    	try {
+
+				return post("/HangmanServer/rest/Melon2/getAllGussedWordByUserId", new TypeReference<ArrayList<WordDTO>>() { },params);
+			} catch (Exception e) {
+				Log.e(TAG, "Error during getAllGussedWordByUserId", e);
 				return null;
 			}
 	    }

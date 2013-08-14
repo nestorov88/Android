@@ -118,6 +118,7 @@ public class WordsListFragment extends Fragment{
 				// TODO Auto-generated method stub
 				Log.i(TAG, "refreshWordExpandableList");
 				if(mListener.getCategoriesList() == null || refresh) {
+					Log.i(TAG,"Get all categories again");
 					categoryList = Manager.getServiceClient().getAllCetogiries();
 					mListener.setCategoriesList(categoryList);
 				} else {

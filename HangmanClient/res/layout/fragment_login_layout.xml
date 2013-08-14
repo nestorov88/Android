@@ -14,6 +14,7 @@
         android:text="User email:"/>
     <EditText 
         android:id="@+id/edTxtUserEmail"
+        android:singleLine="true"
         android:layout_height="wrap_content"
         android:layout_width="200dp"
         android:gravity="center"/>

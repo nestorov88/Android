@@ -69,12 +69,12 @@ public class CategoriesExpandableAdapter extends BaseExpandableListAdapter{
         TextView item = (TextView) convertView.findViewById(R.id.txtWord);
  
         ImageView delete = (ImageView) convertView.findViewById(R.id.imgDelete);
-        delete.setOnClickListener(new OnClickListener() {
+/*        delete.setOnClickListener(new OnClickListener() {
  
             public void onClick(View v) {
             	deleteItem(groupPosition, childPosition);
             }
-        });
+        });*/
  
         item.setText(wordString);
 
@@ -124,13 +124,7 @@ public class CategoriesExpandableAdapter extends BaseExpandableListAdapter{
         return true;
     }
     
-    public void delete(WordDTO word, CategoryDTO category) {
-    	List<WordDTO> child = wordCollections.get(category);
-    	Log.i(TAG, "Deleting word:" + word.getWord());
-    	child.remove(word);
-    	notifyDataSetChanged();
-    	
-    }
+    
     
     public void deleteItem(final int groupPosition, final int childPosition) {
         List<WordDTO> child = wordCollections.get(categories.get(groupPosition));
@@ -154,25 +148,5 @@ public class CategoriesExpandableAdapter extends BaseExpandableListAdapter{
 				return false;
 			}
 		}.execute();
-        /*        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Do you want to remove?");
-        builder.setCancelable(false);
-        builder.setPositiveButton("Yes",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        List<WordDTO> child =
-                            wordCollections.get(categories.get(groupPosition));
-                        child.remove(childPosition);
-                        notifyDataSetChanged();
-                    }
-                });
-        builder.setNegativeButton("No",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();*/
     }
 }

@@ -35,6 +35,7 @@ public class AddWordFragment extends Fragment{
 	private EditText etDescription;
 	private EditText etWord;
 	private Button btnAddWord;
+	private Button btnCancel;
 	private ArrayAdapter<CategoryDTO> categoryAdapter;
 	
 	private Spinner spinnerCategory;
@@ -49,18 +50,27 @@ public class AddWordFragment extends Fragment{
 		
 		etWord = (EditText) view.findViewById(R.id.etAddWord);
 		
+		btnCancel = (Button) view.findViewById(R.id.btnCancel);
+		btnCancel.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				btnCancel.setEnabled(false);
+				getFragmentManager().popBackStack();
+			}
+		});
+		
 		btnAddWord = (Button) view.findViewById(R.id.btnAddWord);
 		btnAddWord.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				addWord();
-				WordsListFragment fr = (WordsListFragment) getFragmentManager().findFragmentByTag("words_list");
-				if (fr != null) {
-					fr.refreshWordExpandableList(true);
-				}
+				if(addWord()) {
+					
 
+				}
 			}
 		});
 		
@@ -121,15 +131,15 @@ public class AddWordFragment extends Fragment{
 		super.onAttach(activity);
 	}
 	
-	private void addWord() {
+	private boolean addWord() {
 		final String word = etWord.getText().toString();
 		String description = etDescription.getText().toString();
-		
-		if(word != null && !word.equals("")) {
+		btnAddWord.setEnabled(false);
+		if(word != null && !word.equals("") && word.length() >= 5) {
 			final WordDTO wordToAdd = new WordDTO();
 			CategoryDTO category = (CategoryDTO) spinnerCategory.getSelectedItem();
 			wordToAdd.setUserDTO(user);
-			wordToAdd.setWord(word);
+			wordToAdd.setWord(word.toLowerCase());
 			wordToAdd.setCategoryId(category.getId());
 			if(description != null && !description.equals("")) {
 				wordToAdd.setDescription(description);
@@ -141,7 +151,13 @@ public class AddWordFragment extends Fragment{
 				public boolean onPostLoad() {
 					// TODO Auto-generated method stub
 					Toast.makeText(getActivity(), "Word '" + word + "' was added.", Toast.LENGTH_SHORT).show();
-					getFragmentManager().popBackStack();
+//					getFragmentManager().popBackStack();
+					mListener.changeFragment(new WordsListFragment(), "words_list", true);
+					WordsListFragment fr = (WordsListFragment) getFragmentManager().findFragmentByTag("words_list");
+					if (fr != null) {
+						fr.refreshWordExpandableList(true);
+					}
+					
 					return false;
 				}
 				
@@ -152,6 +168,11 @@ public class AddWordFragment extends Fragment{
 					return false;
 				}
 			}.execute();
+			return true;
+		} else {
+			Toast.makeText(getActivity(), "The word must be at least 5 characters", Toast.LENGTH_SHORT).show();
+			btnAddWord.setEnabled(true);
+			return false;
 		}
 	}
 }

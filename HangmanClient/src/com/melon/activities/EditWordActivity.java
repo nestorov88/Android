@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.example.hangmanclient.R;
 import com.melon.dto.CategoryDTO;
+import com.melon.dto.GameDTO;
 import com.melon.dto.UserDTO;
 import com.melon.dto.WordDTO;
 import com.melon.fragments.EditWordFragment;
@@ -116,5 +117,17 @@ public class EditWordActivity extends Activity implements FragmentListener{
 		
 		}
 		return true;
+	}
+
+	@Override
+	public GameDTO getGame() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setGame(GameDTO game) {
+		// TODO Auto-generated method stub
+		
 	}
 }

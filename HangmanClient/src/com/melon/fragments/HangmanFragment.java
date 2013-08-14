@@ -1,15 +1,19 @@
 package com.melon.fragments;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
-import android.inputmethodservice.Keyboard.Key;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -24,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.hangmanclient.R;
 import com.melon.dto.CategoryDTO;
+import com.melon.dto.GameDTO;
 import com.melon.dto.UserDTO;
 import com.melon.dto.WordDTO;
 import com.melon.interfaces.FragmentListener;
@@ -44,6 +49,7 @@ public class HangmanFragment extends Fragment{
 	private TextView txtTriesLeft;
 	private TextView txtLettersYouTried;
 	private TextView txtLettersToGuess;
+	private TextView txtWordDescription;
 	
 	private ImageView imgHangmanPicture;
 	
@@ -55,12 +61,12 @@ public class HangmanFragment extends Fragment{
 	private int[] hangmanErrorsPictures;
 	
 	private int triesLeft = 5;
-	private int lettersToGuess;
+	private int lettersToGuess = 0;
 	
 	private EditText etLetterToGuess;
 	private Button btnGuessLetter;
 	
-
+	private GameDTO gameToPlay;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,17 +75,21 @@ public class HangmanFragment extends Fragment{
 		
 		View view = inflater.inflate(R.layout.fragment_hangman, container, false);
 		
-		triedLetters = new ArrayList<Character>();
-
+		if(triedLetters == null) {
+			triedLetters = new ArrayList<Character>();
+		}
+		
 		imgHangmanPicture = (ImageView) view.findViewById(R.id.imgHangmanImage);
 		
 		
 		txtTriesLeft = (TextView) view.findViewById(R.id.txtTriesLeft);
 		
+		txtWordDescription = (TextView) view.findViewById(R.id.txtWordDescription);
 		
 		txtLettersToGuess = (TextView) view.findViewById(R.id.txtLettersToGuess);
 		
 		txtLettersYouTried = (TextView) view.findViewById(R.id.txtLettersYouTried);
+		
 		
 		etLetterToGuess = (EditText) view.findViewById(R.id.etLetterForGuess);
 		etLetterToGuess.setOnEditorActionListener(new OnEditorActionListener() {
@@ -95,6 +105,7 @@ public class HangmanFragment extends Fragment{
 
 		                in.hideSoftInputFromWindow(etLetterToGuess.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 						guessLetter(letter.toCharArray()[0]);
+						etLetterToGuess.setText("");
 					}
 				}
 				return true;
@@ -128,15 +139,8 @@ public class HangmanFragment extends Fragment{
 				
 				@Override
 				public boolean onPostLoad() {
-					// TODO Auto-generated method stub
-					
-					for(CategoryDTO category : categoryList) {
-						wordsList.addAll(category.getWordList());
-					}
-					if(wordToGuess == null) {
-						wordToGuess = getRandomWord();
-					}
-					
+					// TODO Auto-generated method stub				
+					setUpGame();
 					setWordToGuess();
 					updateScreenData();
 					return false;
@@ -149,12 +153,8 @@ public class HangmanFragment extends Fragment{
 				}
 			}.execute();
 		} else {
-			for(CategoryDTO category : categoryList) {
-				wordsList.addAll(category.getWordList());
-			}
-			if(wordToGuess == null) {
-				wordToGuess = getRandomWord();
-			}
+
+			setUpGame();
 			setWordToGuess();
 			updateScreenData();
 		}
@@ -165,6 +165,7 @@ public class HangmanFragment extends Fragment{
 	
 	public WordDTO getRandomWord() {
 		int rd = (int)(Math.random() * wordsList.size());
+		Log.i(TAG, "Word List size: " + wordsList.size() + " rd: " + rd);
 		return wordsList.get(rd);
 	}
 	
@@ -178,6 +179,7 @@ public class HangmanFragment extends Fragment{
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
+		setHasOptionsMenu(true);
         mListener = (FragmentListener) activity;
         if(mListener.getUser() == null) {
         	mListener.setUser(user);
@@ -190,36 +192,51 @@ public class HangmanFragment extends Fragment{
         } else {
         	categoryList = mListener.getCategoriesList();
         }
+        if(mListener.getGame() == null) {
+        	mListener.setGame(gameToPlay);
+        } else {
+        	gameToPlay = mListener.getGame();
+        }
 		super.onAttach(activity);
 	}
 	
 	public char[] maskWord(char[] word) {
 		char[] maskedWord = word;
 		for(int i = 1; i < word.length-1; i++) {
-			maskedWord[i] = '_';
+			if(maskedWord[0] != maskedWord[i] && maskedWord[maskedWord.length -1] != maskedWord[i]) {
+				maskedWord[i] = '_';
+				lettersToGuess++;
+			}
+
 		}
+		triedLetters.add(maskedWord[0]);
+		triedLetters.add(maskedWord[word.length-1]);
+		maskedWord[0] = Character.toUpperCase(maskedWord[0]);
+		maskedWord[word.length-1] = Character.toUpperCase(maskedWord[word.length-1]);
+		
 		return maskedWord;
 	}
 	
 	public void guessLetter(char letter) {
 		Log.i(TAG, "guessLetter");
+		char workChar = Character.toLowerCase(letter);
 		boolean correctGuess = false;
-		if(!triedLetters.contains(letter)) {
+		if(!triedLetters.contains(workChar)) {
 			for(int i = 0; i < wordWorkCopy.length; i++) {
 				
-				if(word[i] == letter) {			
-					wordWorkCopy[i] = letter;
+				if(word[i] == workChar) {			
+					wordWorkCopy[i] = workChar;
 					correctGuess = true;
 					
 					lettersToGuess--;
-					Log.i(TAG, "Word letter: " + word[i] + "Letter: " + letter + "count: " + lettersToGuess);
+					Log.i(TAG, "Word letter: " + word[i] + "Letter: " + workChar + "count: " + lettersToGuess);
 				}
 			}
 			if(correctGuess) {
 				txtWordToGuess.setText(String.valueOf(wordWorkCopy));
-				triedLetters.add(letter);
+				triedLetters.add(workChar);
 			} else {
-				triedLetters.add(letter);
+				triedLetters.add(workChar);
 				triesLeft--;
 			}
 			checkWirOrLose();
@@ -230,12 +247,44 @@ public class HangmanFragment extends Fragment{
 	
 	public void checkWirOrLose() {
 		Log.i(TAG, "Tries left:" + triesLeft + " Letters to guess: " + lettersToGuess);
-		if(triesLeft == 0) {
-			Toast.makeText(getActivity(), "You lose",  Toast.LENGTH_LONG).show();
-		} else if( lettersToGuess == 0) {
-			Toast.makeText(getActivity(), "You won",  Toast.LENGTH_LONG).show();
+		if(gameToPlay.getWholeWordGuessed() == null) {
+			gameToPlay.setWholeWordGuessed(false);
 		}
-		updateScreenData();
+		if(triesLeft == 0) {
+			gameToPlay.setResult(false);
+			
+		} else if( lettersToGuess == 0) {
+			gameToPlay.setResult(true);
+			
+		}
+		if(gameToPlay.getResult() != null) {
+			new NNAsyncTask() {
+				
+				@Override
+				public boolean onPostLoad() {
+					// TODO Auto-generated method stub
+					if(gameToPlay.getResult()) {
+						Toast.makeText(getActivity(), "You won",  Toast.LENGTH_LONG).show();
+					} else {
+						Toast.makeText(getActivity(), "You lose",  Toast.LENGTH_LONG).show();
+					}
+					getFragmentManager().popBackStack();
+					return false;
+				}
+				
+				@Override
+				public boolean onLoad() {
+					// TODO Auto-generated method stub
+					Manager.getServiceClient().saveGame(gameToPlay);
+					UserDetailsFragment fg = (UserDetailsFragment) getFragmentManager().findFragmentByTag("user_detail");
+					fg.refreshUser();
+					return false;
+				}
+			}.execute();
+		} else {
+			updateScreenData();
+		}
+		
 	}
 	
 	public void setWordToGuess() {
@@ -243,10 +292,10 @@ public class HangmanFragment extends Fragment{
 		if(word == null) {
 			word = wordToGuess.getWord().toCharArray();
 			wordWorkCopy = maskWord(wordToGuess.getWord().toCharArray());
-			lettersToGuess = word.length - 2;
 		} 
 		
 		txtWordToGuess.setText(String.valueOf(wordWorkCopy));
+		txtWordDescription.setText(getResources().getString(R.string.word_description) + wordToGuess.getDescription());
 
 	}
 	
@@ -263,5 +312,68 @@ public class HangmanFragment extends Fragment{
 		String lyt = getResources().getString(R.string.letters_you_have_tried) + sb.toString();
 		txtLettersYouTried.setText(lyt);
 		Log.i(TAG, "TRL: " + trl + " LTG: " + ltg + " LYT: " + lyt);
+	}
+	
+	private void setUpGame() {
+		for(CategoryDTO category : categoryList) {
+			wordsList.addAll(category.getWordList());
+		}
+		if(wordToGuess == null) {
+			wordToGuess = getRandomWord();
+		}
+		gameToPlay = new GameDTO();
+		gameToPlay.setUserId(user.getId());
+		gameToPlay.setWordID(wordToGuess.getId());
+
+	}
+	
+	private void tryToGuessWholeWord() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Enter your word:");
+        final EditText et = new EditText(getActivity());
+        builder.setView(et);
+        builder.setCancelable(false);
+        builder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    	String text = et.getText().toString().toLowerCase();
+                    	String wordToGuessToLowerCase = wordToGuess.getWord().toLowerCase();
+                    	Log.i(TAG, "Text: " + text + " wordToGuess:" + wordToGuessToLowerCase);
+                    	if(wordToGuessToLowerCase.equals(text)) {
+                    		lettersToGuess = 0;
+                    		gameToPlay.setWholeWordGuessed(true);
+                    	} else {
+                    		triesLeft = 0;
+                    	}
+                    	checkWirOrLose();
+                    }
+                });
+        builder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// TODO Auto-generated method stub
+
+		inflater.inflate(R.menu.hangman_menu, menu);
+
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		case R.id.guessWholeWord:
+			tryToGuessWholeWord();
+		default:
+			return false;
+		}
 	}
 }

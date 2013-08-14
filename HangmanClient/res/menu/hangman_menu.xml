@@ -3,9 +3,9 @@
     
          
     <item
-        android:id="@+id/addWord"
+        android:id="@+id/guessWholeWord"
         android:orderInCategory="1"
         android:showAsAction="always"
-        android:title="@string/add_word"/>
+        android:title="@string/guess_whole_word"/>
 
 </menu>

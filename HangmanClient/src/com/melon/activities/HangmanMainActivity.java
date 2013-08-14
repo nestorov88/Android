@@ -15,6 +15,7 @@ import android.view.View;
 
 import com.example.hangmanclient.R;
 import com.melon.dto.CategoryDTO;
+import com.melon.dto.GameDTO;
 import com.melon.dto.UserDTO;
 import com.melon.dto.WordDTO;
 import com.melon.fragments.EditWordFragment;
@@ -28,6 +29,7 @@ public class HangmanMainActivity extends Activity implements FragmentListener {
 	private UserDTO user;
 	private WordDTO wordToEdit;
 	private ArrayList<CategoryDTO> categoriesList;
+	private GameDTO gameToPlay;
 
 	
 	@Override
@@ -114,7 +116,7 @@ public class HangmanMainActivity extends Activity implements FragmentListener {
 		final ExpandableViewContextMenuInfo info = (ExpandableViewContextMenuInfo) item.getMenuInfo();
 		
 		if(item.getTitle().equals("Delete")) {
-			WordsListFragment wordListFragment = (WordsListFragment)getFragmentManager().findFragmentById(R.id.wordListFragment);
+			WordsListFragment wordListFragment = (WordsListFragment)getFragmentManager().findFragmentByTag("words_list");
 			wordListFragment.getAdapter().deleteItem(info.groupPosition, info.childPosition);
 			wordListFragment.refreshWordExpandableList(true);
 		} else if(item.getTitle().equals("Edit")) {
@@ -123,6 +125,16 @@ public class HangmanMainActivity extends Activity implements FragmentListener {
 		
 		}
 		return true;
+	}
+
+	@Override
+	public GameDTO getGame() {
+		return gameToPlay;
+	}
+
+	@Override
+	public void setGame(GameDTO game) {
+		this.gameToPlay = game;
 	}
 	
 }

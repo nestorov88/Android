@@ -17,5 +17,14 @@
     <string name="make_a_guess">Make a guess</string>
     <string name="letters_to_guess">"Letters to guess: "</string>
     <string name="letters_you_have_tried">"Letters you have tried: "</string>
+    <string name="id">"ID: "</string>
+    <string name="username">"Username: "</string>
+    <string name="games">"Games: "</string>
+    <string name="win">win:</string>
+    <string name="lose">"lose: "</string>
+    <string name="whole_word_guesses">"whole word guesses: "</string>
+    <string name="gussed_words">"Gussed words: "</string>
+    <string name="word_description">"Word description: "</string>
+    <string name="guess_whole_word">Guess whole word</string>
 
 </resources>

@@ -41,7 +41,13 @@
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="20dp"
 	        android:textSize="20dp"
-	        android:text=""/>     
+	        android:text=""/>
+        <TextView 
+            android:id="@+id/txtWordDescription"
+            android:layout_width="300dp"
+            android:maxLines="3"
+            android:layout_height="wrap_content"
+            android:text="@string/word_description"/>	         
 	    <EditText 
 	        android:id="@+id/etLetterForGuess"
 	        android:layout_width="300dp"
