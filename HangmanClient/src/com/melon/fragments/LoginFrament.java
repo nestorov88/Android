@@ -1,25 +1,24 @@
 package com.melon.fragments;
 
-import com.example.hangmanclient.R;
-import com.melon.dto.UserDTO;
-import com.melon.interfaces.FragmentListener;
-import com.melon.rest.RestClient;
-import com.melon.utils.CMAsyncTask;
-import com.melon.utils.NNAsyncTask;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.example.hangmanclient.R;
+import com.melon.dto.UserDTO;
+import com.melon.interfaces.FragmentListener;
+import com.melon.rest.RestClient;
+import com.melon.utils.NNAsyncTask;
 
 public class LoginFrament extends Fragment {
 
@@ -42,8 +41,9 @@ public class LoginFrament extends Fragment {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				String email = etEmail.getText().toString();
-				login(email);
 				btnLogin.setEnabled(false);
+				login(email);
+				
 			}
 		});
 		
@@ -52,8 +52,8 @@ public class LoginFrament extends Fragment {
 
 	
 	private void login(final String email) {
-		if(email != null && !email.equals("")) {
-			new NNAsyncTask() {
+		if(email != null && !email.equals("") && validEmail(email)) {
+			new NNAsyncTask(getActivity(), true) {
 				
 				UserDTO user;
 				
@@ -77,7 +77,7 @@ public class LoginFrament extends Fragment {
 					user = rc.getUserByEmail(email);
 					
 					if(user == null) {
-						Log.i(TAG, "User is: "+user);
+//						Log.i(TAG, "User is: "+user);
 						user = new UserDTO();
 						user.setEmail(email);
 						user = rc.saveUser(user);
@@ -86,6 +86,9 @@ public class LoginFrament extends Fragment {
 					return true;							
 				}
 			}.execute();
+		} else {
+			btnLogin.setEnabled(true);
+			Toast.makeText(getActivity(), "Email is no valid", Toast.LENGTH_SHORT).show();
 		}
 	}
 	
@@ -101,5 +104,8 @@ public class LoginFrament extends Fragment {
         }
 	}
 	
-	
+	private boolean validEmail(String email) {
+	    Pattern pattern = Patterns.EMAIL_ADDRESS;
+	    return pattern.matcher(email).matches();
+	}
 }

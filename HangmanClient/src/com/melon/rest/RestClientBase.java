@@ -60,7 +60,7 @@ public class RestClientBase {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             httpResp.getEntity().writeTo(baos);
             String resp = new String(baos.toByteArray());
-            Log.d(TAG, "Response: " + resp);
+//            Log.d(TAG, "Response: " + resp);
             @SuppressWarnings("unchecked")
             T res = (T) mapper.readValue(resp, T);
             return res;
@@ -147,13 +147,13 @@ public class RestClientBase {
             /*
              * Execute POST request
              */
-            Log.i(TAG, "postRequest=" + postRequest.getURI().getPath());
+//            Log.i(TAG, "postRequest=" + postRequest.getURI().getPath());
             HttpResponse httpResp = client.execute(host, postRequest);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             httpResp.getEntity().writeTo(baos);
             String resp = new String(baos.toByteArray());
             try {
-            	Log.i(TAG, "Response: " + resp);
+//            	Log.i(TAG, "Response: " + resp);
                 T res = mapper.readValue(resp, tref);
                 return res;
             } catch (JsonMappingException e) {

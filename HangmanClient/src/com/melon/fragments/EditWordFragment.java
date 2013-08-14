@@ -83,7 +83,7 @@ public class EditWordFragment extends Fragment{
 		
 		
 		if(categoryList == null || (categoryList.size() == 0)) {
-			new NNAsyncTask() {
+			new NNAsyncTask(getActivity(), true) {
 				
 				@Override
 				public boolean onPostLoad() {
@@ -175,7 +175,7 @@ public class EditWordFragment extends Fragment{
 				wordToEdit.setDescription(description);
 			}
 			
-			new NNAsyncTask() {
+			new NNAsyncTask(getActivity(), true) {
 				
 				@Override
 				public boolean onPostLoad() {

@@ -42,7 +42,7 @@ public class UserDetailsFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+		setRetainInstance(true);
 		View view = inflater.inflate(R.layout.fragment_user_details_layout, container, false);
 		
         InputMethodManager in = (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
@@ -60,9 +60,7 @@ public class UserDetailsFragment extends Fragment{
 		}
 		
 
-		if(savedInstanceState == null) {
-			setupUserDetails();
-		}
+		setupUserDetails();
 
 		
 		
@@ -78,9 +76,9 @@ public class UserDetailsFragment extends Fragment{
             mListener = (FragmentListener) activity;
             if(mListener.getUser() == null) {
             	mListener.setUser(user);
-            	Log.i(TAG,"Setting1 user: " + user);
+            	
             } else {
-            	Log.i(TAG,"Setting2 user: " + user);
+            	
             	user = mListener.getUser();
             }
         } catch (ClassCastException e) {
@@ -127,7 +125,7 @@ public class UserDetailsFragment extends Fragment{
 	
 	private void setupUserDetails() {
 		if(user != null) {
-			new NNAsyncTask() {
+			new NNAsyncTask(getActivity(), true) {
 				
 				@Override
 				public boolean onPostLoad() {
@@ -172,7 +170,7 @@ public class UserDetailsFragment extends Fragment{
 	}
 	
 	public void refreshUser() {
-		new NNAsyncTask() {
+		new NNAsyncTask(getActivity(), true) {
 			
 			@Override
 			public boolean onPostLoad() {

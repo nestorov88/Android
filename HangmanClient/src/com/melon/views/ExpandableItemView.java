@@ -40,7 +40,7 @@ public class ExpandableItemView extends RelativeLayout{
 	@Override
 	protected void onFinishInflate() {
 		// TODO Auto-generated method stub
-		Log.i("", "INFLATING");
+	
         txtWord = (TextView) this.findViewById(R.id.txtWord);
         
         ImageView delete = (ImageView) this.findViewById(R.id.imgDelete);

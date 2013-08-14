@@ -76,7 +76,7 @@ public class AddWordFragment extends Fragment{
 		
 		
 		if(categoryList == null || (categoryList.size() == 0)) {
-			new NNAsyncTask() {
+			new NNAsyncTask(getActivity(), true) {
 				
 				@Override
 				public boolean onPostLoad() {
@@ -145,19 +145,13 @@ public class AddWordFragment extends Fragment{
 				wordToAdd.setDescription(description);
 			}
 			
-			new NNAsyncTask() {
+			new NNAsyncTask(getActivity(), true) {
 				
 				@Override
 				public boolean onPostLoad() {
 					// TODO Auto-generated method stub
 					Toast.makeText(getActivity(), "Word '" + word + "' was added.", Toast.LENGTH_SHORT).show();
-//					getFragmentManager().popBackStack();
-					mListener.changeFragment(new WordsListFragment(), "words_list", true);
-					WordsListFragment fr = (WordsListFragment) getFragmentManager().findFragmentByTag("words_list");
-					if (fr != null) {
-						fr.refreshWordExpandableList(true);
-					}
-					
+					getFragmentManager().popBackStack();
 					return false;
 				}
 				

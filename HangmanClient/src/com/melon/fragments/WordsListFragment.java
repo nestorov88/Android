@@ -51,7 +51,7 @@ public class WordsListFragment extends Fragment{
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
-				Log.i(TAG, "Item was clicked");
+//				
  
 				getActivity().registerForContextMenu(v);
 				getActivity().openContextMenu(v);
@@ -64,7 +64,7 @@ public class WordsListFragment extends Fragment{
 
 
 		if(savedInstanceState == null) {
-			refreshWordExpandableList(false);
+			refreshWordExpandableList(true);
 		}
 	
 		
@@ -77,9 +77,9 @@ public class WordsListFragment extends Fragment{
         mListener = (FragmentListener) activity;
         if(mListener.getUser() == null) {
         	mListener.setUser(user);
-        	Log.i(TAG,"Setting user: " + user);
+        	
         } else {
-        	Log.i(TAG,"Setting user: " + user);
+        	
         	user = mListener.getUser();
         }
         
@@ -104,7 +104,7 @@ public class WordsListFragment extends Fragment{
 	
 	
 	public void refreshWordExpandableList(final boolean refresh) {
-		new NNAsyncTask() {
+		new NNAsyncTask(getActivity(), false) {
 			
 			@Override
 			public boolean onPostLoad() {
@@ -116,9 +116,9 @@ public class WordsListFragment extends Fragment{
 			@Override
 			public boolean onLoad() {
 				// TODO Auto-generated method stub
-				Log.i(TAG, "refreshWordExpandableList");
+//				Log.i(TAG, "refreshWordExpandableList");
 				if(mListener.getCategoriesList() == null || refresh) {
-					Log.i(TAG,"Get all categories again");
+//					Log.i(TAG,"Get all categories again");
 					categoryList = Manager.getServiceClient().getAllCetogiries();
 					mListener.setCategoriesList(categoryList);
 				} else {
@@ -130,20 +130,20 @@ public class WordsListFragment extends Fragment{
 				
 				for (int i = 0; i < categoryList.size(); i++) {
 					CategoryDTO category = categoryList.get(i);
-					Log.i(TAG, "Category Name: " + category.getName() + " word list size: " + category.getWordList().size());
+//					Log.i(TAG, "Category Name: " + category.getName() + " word list size: " + category.getWordList().size());
 					ArrayList<WordDTO> wordsAddedByUserList = new ArrayList<WordDTO>();
 					
 					for(int j = 0; j < category.getWordList().size(); j++) {
 						WordDTO word = category.getWordList().get(j);
-						Log.i(TAG, "User: " + user);
+//						Log.i(TAG, "User: " + user);
 						
-						Log.i(TAG, "Word User ID: " + word.getUserDTO().getId() + " Saved User ID: " + user.getId());
+//						Log.i(TAG, "Word User ID: " + word.getUserDTO().getId() + " Saved User ID: " + user.getId());
 						if(word.getUserDTO().getId().equals(user.getId())) {
 							wordsAddedByUserList.add(word);
 						}
 						
 					}
-					Log.i(TAG, "Category Name: " + category.getName() + " word list size: " + wordsAddedByUserList.size());
+//					Log.i(TAG, "Category Name: " + category.getName() + " word list size: " + wordsAddedByUserList.size());
 					expandableList.put(category, wordsAddedByUserList);
 					wordsList.addAll(category.getWordList());
 				}

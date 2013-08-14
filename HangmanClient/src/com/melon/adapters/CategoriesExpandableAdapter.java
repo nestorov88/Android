@@ -3,17 +3,12 @@ package com.melon.adapters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
@@ -56,11 +51,8 @@ public class CategoriesExpandableAdapter extends BaseExpandableListAdapter{
         final String wordString = word.getWord() ;
         
         LayoutInflater inflater = context.getLayoutInflater();
-        Log.i(TAG, "convertView:" + convertView );
+//        Log.i(TAG, "convertView:" + convertView );
         if (convertView == null) {
-/*        	ExpandableItemView vw = (ExpandableItemView) inflater.inflate(R.layout.view_word_layout, null);
-        	vw.setContent(word, (CategoryDTO)getGroup(groupPosition));
-            convertView = vw;*/
         	
             convertView = inflater.inflate(R.layout.view_word_layout, null);
             ((ExpandableItemView)convertView).setContent(word, childPosition, groupPosition);
@@ -129,11 +121,11 @@ public class CategoriesExpandableAdapter extends BaseExpandableListAdapter{
     public void deleteItem(final int groupPosition, final int childPosition) {
         List<WordDTO> child = wordCollections.get(categories.get(groupPosition));
         final WordDTO word = child.remove(childPosition);
-       	Log.i(TAG, "Deleting word:" + word.getWord());
+//       	Log.i(TAG, "Deleting word:" + word.getWord());
         notifyDataSetChanged();
 
         
-        new NNAsyncTask() {
+        new NNAsyncTask(context, false) {
 			
 			@Override
 			public boolean onPostLoad() {

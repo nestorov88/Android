@@ -135,7 +135,7 @@ public class HangmanFragment extends Fragment{
 		wordsList = new ArrayList<WordDTO>();
 		
 		if(categoryList == null || (categoryList.size() == 0)) {
-			new NNAsyncTask() {
+			new NNAsyncTask(getActivity(), true) {
 				
 				@Override
 				public boolean onPostLoad() {
@@ -165,7 +165,7 @@ public class HangmanFragment extends Fragment{
 	
 	public WordDTO getRandomWord() {
 		int rd = (int)(Math.random() * wordsList.size());
-		Log.i(TAG, "Word List size: " + wordsList.size() + " rd: " + rd);
+//		Log.i(TAG, "Word List size: " + wordsList.size() + " rd: " + rd);
 		return wordsList.get(rd);
 	}
 	
@@ -218,7 +218,7 @@ public class HangmanFragment extends Fragment{
 	}
 	
 	public void guessLetter(char letter) {
-		Log.i(TAG, "guessLetter");
+//		Log.i(TAG, "guessLetter");
 		char workChar = Character.toLowerCase(letter);
 		boolean correctGuess = false;
 		if(!triedLetters.contains(workChar)) {
@@ -229,7 +229,7 @@ public class HangmanFragment extends Fragment{
 					correctGuess = true;
 					
 					lettersToGuess--;
-					Log.i(TAG, "Word letter: " + word[i] + "Letter: " + workChar + "count: " + lettersToGuess);
+//					Log.i(TAG, "Word letter: " + word[i] + "Letter: " + workChar + "count: " + lettersToGuess);
 				}
 			}
 			if(correctGuess) {
@@ -246,7 +246,7 @@ public class HangmanFragment extends Fragment{
 	}
 	
 	public void checkWirOrLose() {
-		Log.i(TAG, "Tries left:" + triesLeft + " Letters to guess: " + lettersToGuess);
+//		Log.i(TAG, "Tries left:" + triesLeft + " Letters to guess: " + lettersToGuess);
 		if(gameToPlay.getWholeWordGuessed() == null) {
 			gameToPlay.setWholeWordGuessed(false);
 		}
@@ -258,7 +258,7 @@ public class HangmanFragment extends Fragment{
 			
 		}
 		if(gameToPlay.getResult() != null) {
-			new NNAsyncTask() {
+			new NNAsyncTask(getActivity(), true) {
 				
 				@Override
 				public boolean onPostLoad() {
@@ -311,7 +311,7 @@ public class HangmanFragment extends Fragment{
 		}
 		String lyt = getResources().getString(R.string.letters_you_have_tried) + sb.toString();
 		txtLettersYouTried.setText(lyt);
-		Log.i(TAG, "TRL: " + trl + " LTG: " + ltg + " LYT: " + lyt);
+		
 	}
 	
 	private void setUpGame() {
@@ -338,7 +338,7 @@ public class HangmanFragment extends Fragment{
                     public void onClick(DialogInterface dialog, int id) {
                     	String text = et.getText().toString().toLowerCase();
                     	String wordToGuessToLowerCase = wordToGuess.getWord().toLowerCase();
-                    	Log.i(TAG, "Text: " + text + " wordToGuess:" + wordToGuessToLowerCase);
+//                    	Log.i(TAG, "Text: " + text + " wordToGuess:" + wordToGuessToLowerCase);
                     	if(wordToGuessToLowerCase.equals(text)) {
                     		lettersToGuess = 0;
                     		gameToPlay.setWholeWordGuessed(true);
